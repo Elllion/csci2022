@@ -12,9 +12,12 @@ import javafx.scene.input.*;
 import javafx.scene.image.*;
 import javafx.collections.*;
 import javafx.event.*;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 import java.io.*;
 import java.net.*;
+import javax.swing.JTable;
 
 import org.apache.commons.validator.*;
 
@@ -24,11 +27,85 @@ public class Lab08 extends Application {
   private TableView<StudentRecord> table;
   private TextField txtID, txtMt, txtAs, txtEx;
   
+  private File currentFilename = new File("default.csv");
  EmailValidator mailCheck = EmailValidator.getInstance();
 @Override
   public void start(Stage primaryStage) throws Exception {
-    primaryStage.setTitle("Lab 5 Demo");
+    primaryStage.setTitle("Lab 8 Demo");
 
+	Menu fileMenu = new Menu("File");
+	
+	MenuItem newButton =  new MenuItem("New");
+	newButton.setOnAction(new EventHandler<ActionEvent>(){
+		@Override public void handle(ActionEvent e) {
+			table.getItems().clear();
+		}
+	});
+	
+	MenuItem openButton = new MenuItem("Open");
+	openButton.setOnAction(new EventHandler<ActionEvent>(){
+		@Override public void handle(ActionEvent a) {
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open Resource File");
+			fileChooser.getExtensionFilters().addAll(
+         new ExtensionFilter("CSV Files", "*.csv"));
+			File selectedFile = fileChooser.showOpenDialog(primaryStage);
+			if (selectedFile != null) {
+			currentFilename = selectedFile;
+			try{
+			load();
+			}
+			catch(FileNotFoundException e){
+				System.err.println("File not found");
+			}
+			}
+		}
+	});
+	
+	MenuItem saveButton = new MenuItem("Save");
+	saveButton.setOnAction(new EventHandler<ActionEvent>(){
+		@Override public void handle(ActionEvent a) {
+			try{save();}
+			catch (FileNotFoundException e){
+				System.err.println("File Not Found");
+			}
+		}
+	});
+	
+	MenuItem saveAsButton = new MenuItem("Save As");
+	saveAsButton.setOnAction(new EventHandler<ActionEvent>(){
+		@Override public void handle(ActionEvent a) {
+			try{
+				FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open Resource File");
+			fileChooser.getExtensionFilters().addAll(
+         new ExtensionFilter("CSV Files", "*.csv"));
+			File selectedFile = fileChooser.showOpenDialog(primaryStage);
+			if (selectedFile != null) {
+			currentFilename = selectedFile;
+			}
+				save();}
+			catch (FileNotFoundException e){
+				System.err.println("File Not Found");
+			}
+		}
+	});
+	
+	MenuItem exitButton = new MenuItem("Exit");
+	exitButton.setOnAction(new EventHandler<ActionEvent>(){
+		@Override public void handle(ActionEvent a) {
+			System.exit(0);
+		}
+	});
+	fileMenu.getItems().add(newButton);
+	fileMenu.getItems().add(openButton);
+	fileMenu.getItems().add(saveButton);
+	fileMenu.getItems().add(saveAsButton);
+	fileMenu.getItems().add(exitButton);
+	
+	MenuBar menuBar = new MenuBar();
+	menuBar.getMenus().add(fileMenu);
+	
     GridPane editArea = new GridPane();
     editArea.setPadding(new Insets(10, 10, 10, 10));
     editArea.setVgap(10);
@@ -64,7 +141,7 @@ public class Lab08 extends Application {
 	columnTL.setCellValueFactory(new PropertyValueFactory<>("total"));
 	
 	TableColumn<StudentRecord,Character> columnGL;
-	columnGL = new TableColumn<>("Midterm");
+	columnGL = new TableColumn<>("Grade");
 	columnGL.setMinWidth(100);
 	columnGL.setCellValueFactory(new PropertyValueFactory<>("grade"));
 	
@@ -116,15 +193,51 @@ public class Lab08 extends Application {
 	
     // initialize the border pane
     layout = new BorderPane();
+	layout.setTop(menuBar);
 	layout.setCenter(table);
 	layout.setBottom(editArea);
 
     Scene scene = new Scene(layout, 600, 300);
     primaryStage.setScene(scene);
     primaryStage.show();
+load();	
   }
-
-
+	public void save() throws FileNotFoundException{
+		try{		
+		currentFilename.createNewFile();
+		}catch(IOException e){
+			System.err.println("IOException");
+		}
+		PrintWriter pw = new PrintWriter(currentFilename);
+		StringBuilder sb = new StringBuilder();
+		for(int r = 0; r < table.getItems().size(); r++){
+			for(int c = 0; c < 4; c++){
+				sb.append(table.getColumns().get(c).getCellObservableValue(r).getValue().toString());
+				sb.append(",");
+			}
+			sb.append("\n");
+		}
+		
+		pw.write(sb.toString());
+		pw.close();
+	}
+	
+	public void load() throws FileNotFoundException{
+		ObservableList<StudentRecord> marks =
+		FXCollections.observableArrayList();
+		String line = "";
+		try(BufferedReader br = new BufferedReader(new FileReader(currentFilename))){
+			while((line = br.readLine()) != null){
+				String[] data = line.split(",");
+				marks.add(new StudentRecord(data[0],Float.parseFloat(data[1]),Float.parseFloat(data[2]),Float.parseFloat(data[3])));
+			}			
+			br.close();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		
+		table.setItems(marks);
+	}
   public static void main(String[] args) {
     launch(args);
   }

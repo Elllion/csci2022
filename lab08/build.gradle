@@ -9,4 +9,4 @@ dependencies{
 	compile "commons-validator:commons-validator:1.6"
 }
 
-mainClassName = 'csci2020u.Lab05'
+mainClassName = 'csci2020u.Lab08'

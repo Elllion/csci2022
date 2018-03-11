@@ -120,6 +120,7 @@ private Map<String,Integer> events = new TreeMap<>();
 					events.put(data[5],1);
 				}
 			}
+			
 			br.close();
 		}catch(IOException e){
 			e.printStackTrace();

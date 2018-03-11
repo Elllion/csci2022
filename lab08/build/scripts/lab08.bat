@@ -1,7 +1,7 @@
 @if "%DEBUG%" == "" @echo off
 @rem ##########################################################################
 @rem
-@rem  lab05 startup script for Windows
+@rem  lab08 startup script for Windows
 @rem
 @rem ##########################################################################
 
@@ -13,7 +13,7 @@ if "%DIRNAME%" == "" set DIRNAME=.
 set APP_BASE_NAME=%~n0
 set APP_HOME=%DIRNAME%..
 
-@rem Add default JVM options here. You can also use JAVA_OPTS and LAB05_OPTS to pass JVM options to this script.
+@rem Add default JVM options here. You can also use JAVA_OPTS and LAB08_OPTS to pass JVM options to this script.
 set DEFAULT_JVM_OPTS=
 
 @rem Find java.exe
@@ -63,19 +63,19 @@ set CMD_LINE_ARGS=%*
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\lab05.jar;%APP_HOME%\lib\commons-validator-1.6.jar;%APP_HOME%\lib\commons-beanutils-1.9.2.jar;%APP_HOME%\lib\commons-digester-1.8.1.jar;%APP_HOME%\lib\commons-logging-1.2.jar;%APP_HOME%\lib\commons-collections-3.2.2.jar
+set CLASSPATH=%APP_HOME%\lib\lab08.jar;%APP_HOME%\lib\commons-validator-1.6.jar;%APP_HOME%\lib\commons-beanutils-1.9.2.jar;%APP_HOME%\lib\commons-digester-1.8.1.jar;%APP_HOME%\lib\commons-logging-1.2.jar;%APP_HOME%\lib\commons-collections-3.2.2.jar
 
-@rem Execute lab05
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %LAB05_OPTS%  -classpath "%CLASSPATH%" csci2020u.Lab05 %CMD_LINE_ARGS%
+@rem Execute lab08
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %LAB08_OPTS%  -classpath "%CLASSPATH%" csci2020u.Lab08 %CMD_LINE_ARGS%
 
 :end
 @rem End local scope for the variables with windows NT shell
 if "%ERRORLEVEL%"=="0" goto mainEnd
 
 :fail
-rem Set variable LAB05_EXIT_CONSOLE if you need the _script_ return code instead of
+rem Set variable LAB08_EXIT_CONSOLE if you need the _script_ return code instead of
 rem the _cmd.exe /c_ return code!
-if  not "" == "%LAB05_EXIT_CONSOLE%" exit 1
+if  not "" == "%LAB08_EXIT_CONSOLE%" exit 1
 exit /b 1
 
 :mainEnd
